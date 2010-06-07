@@ -1,0 +1,10 @@
+Revision history for MooseX::Types::DBIx::Class
+
+0.01 Jun 7, 2010
+
+    * Initial version, has types for:
+        - ResultSet
+        - ResultSource
+        - Row
+        - Schema
+        
