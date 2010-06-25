@@ -1,5 +1,9 @@
 Revision history for MooseX::Types::DBIx::Class
 
+0.02 Jun 25, 2010
+
+    * Added parameterizable type constraints. Patch by Brian Phillips
+
 0.01.02 Jun 12, 2010
 
     * Distribution fixes
