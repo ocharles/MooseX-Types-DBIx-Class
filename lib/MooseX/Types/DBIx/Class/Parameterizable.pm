@@ -2,6 +2,8 @@ package MooseX::Types::DBIx::Class::Parameterizable;
 
 # ABSTRACT: Parameterizable MooseX::Types for DBIx::Class objects
 
+use strict;
+use warnings;
 use MooseX::Types -declare => [qw(
     Schema
     ResultSource

@@ -33,36 +33,36 @@ use MooseX::Types::DBIx::Class qw(
 }
 
 {
-	package My::Moose::Class;
+    package My::Moose::Class;
 
-	use Moose;
-	use MooseX::Types::DBIx::Class::Parameterizable qw(Schema ResultSet ResultSource Row);
-	use MooseX::Types::Parameterizable qw(Parameterizable);
-	use MooseX::Types::Moose qw(Int);
-	use Moose::Util::TypeConstraints;
-	use MooseX::Types -declare => [qw(VeryFluffy SomewhatFluffy PickyFluffiness)];
+    use Moose;
+    use MooseX::Types::DBIx::Class::Parameterizable qw(Schema ResultSet ResultSource Row);
+    use MooseX::Types::Parameterizable qw(Parameterizable);
+    use MooseX::Types::Moose qw(Int);
+    use Moose::Util::TypeConstraints;
+    use MooseX::Types -declare => [qw(VeryFluffy SomewhatFluffy PickyFluffiness)];
 
-	has str_schema      => ( is => 'rw', isa => Schema['Test::Schema']   );
-	has regex_schema    => ( is => 'rw', isa => Schema[qr/schema/i]      );
-	has other_schema    => ( is => 'rw', isa => Schema[qr/Other/]        );
-	has falafels_rs     => ( is => 'rw', isa => ResultSet['Falafels']    );
-	has fluffles_source => ( is => 'rw', isa => ResultSource['Fluffles'] );
-	has falafel_row     => ( is => 'rw', isa => Row['Falafels']          );
-	has any_row         => ( is => 'rw', isa => Row                      );
+    has str_schema      => ( is => 'rw', isa => Schema['Test::Schema']   );
+    has regex_schema    => ( is => 'rw', isa => Schema[qr/schema/i]      );
+    has other_schema    => ( is => 'rw', isa => Schema[qr/Other/]        );
+    has falafels_rs     => ( is => 'rw', isa => ResultSet['Falafels']    );
+    has fluffles_source => ( is => 'rw', isa => ResultSource['Fluffles'] );
+    has falafel_row     => ( is => 'rw', isa => Row['Falafels']          );
+    has any_row         => ( is => 'rw', isa => Row                      );
 
-	subtype VeryFluffy,     as Row['Fluffles'], where { $_->fluff_factor > 500 };
-	subtype SomewhatFluffy, as Row['Fluffles'], where { $_->fluff_factor > 50 };
+    subtype VeryFluffy,     as Row['Fluffles'], where { $_->fluff_factor > 500 };
+    subtype SomewhatFluffy, as Row['Fluffles'], where { $_->fluff_factor > 50 };
 
-	has very_fluffy_fluffle      => ( is => 'rw', isa => VeryFluffy     );
-	has somewhate_fluffy_fluffle => ( is => 'rw', isa => SomewhatFluffy );
+    has very_fluffy_fluffle      => ( is => 'rw', isa => VeryFluffy     );
+    has somewhate_fluffy_fluffle => ( is => 'rw', isa => SomewhatFluffy );
 
-	subtype PickyFluffiness,
-		as Parameterizable[Row['Fluffles'], Int],
-		where {
-			my($row, $threshold) = @_;
-			return Row(['Fluffles'])->check($row) && $row->fluff_factor == $threshold;
-		};
-	has picky_fluffy_fluffle => ( is => 'rw', isa => PickyFluffiness[100] );
+    subtype PickyFluffiness,
+        as Parameterizable[Row['Fluffles'], Int],
+        where {
+            my($row, $threshold) = @_;
+            return Row(['Fluffles'])->check($row) && $row->fluff_factor == $threshold;
+        };
+    has picky_fluffy_fluffle => ( is => 'rw', isa => PickyFluffiness[100] );
 }
 
 my $schema = Test::Schema->connect('dbi:SQLite::memory:');
