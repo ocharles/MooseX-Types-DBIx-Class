@@ -36,7 +36,7 @@ use MooseX::Types::DBIx::Class qw(
     package My::Moose::Class;
 
     use Moose;
-    use MooseX::Types::DBIx::Class::Parameterizable qw(Schema ResultSet ResultSource Row);
+    use MooseX::Types::DBIx::Class qw(Schema ResultSet ResultSource Row);
     use MooseX::Types::Parameterizable qw(Parameterizable);
     use MooseX::Types::Moose qw(Int);
     use Moose::Util::TypeConstraints;
