@@ -48,6 +48,7 @@ use MooseX::Types::DBIx::Class qw(
 	has falafels_rs     => ( is => 'rw', isa => ResultSet['Falafels']    );
 	has fluffles_source => ( is => 'rw', isa => ResultSource['Fluffles'] );
 	has falafel_row     => ( is => 'rw', isa => Row['Falafels']          );
+	has any_row         => ( is => 'rw', isa => Row                      );
 
 	subtype VeryFluffy,     as Row['Fluffles'], where { $_->fluff_factor > 500 };
 	subtype SomewhatFluffy, as Row['Fluffles'], where { $_->fluff_factor > 50 };
@@ -108,6 +109,15 @@ ok !eval {$o->falafel_row(undef); 1 }, 'Undefined row rejected';
 like $@, qr/does not pass the type constraint/, 'non-matching row has type-constraint error';
 
 ok !eval {$o->falafel_row("abc"); 1 }, 'Non-object row rejected';
+like $@, qr/does not pass the type constraint/, 'non-matching row has type-constraint error';
+
+$o->any_row($fluffles_row);
+is $o->any_row, $fluffles_row, 'any_row accepts Fluffles';
+
+$o->any_row($falafel_row);
+is $o->any_row, $falafel_row, 'any_row accepts Falafels';
+
+ok !eval {$o->any_row("abc"); 1 }, 'Non-object row rejected';
 like $@, qr/does not pass the type constraint/, 'non-matching row has type-constraint error';
 
 $o->somewhate_fluffy_fluffle($fluffles_row);

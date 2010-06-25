@@ -8,7 +8,7 @@ use MooseX::Types -declare => [qw(
     ResultSet
     Row
 )];
-use MooseX::Types::Moose qw(Str RegexpRef);
+use MooseX::Types::Moose qw(Maybe Str RegexpRef);
 
 use MooseX::Types::DBIx::Class (
     Schema       => { -as => 'BaseSchema' },
@@ -22,28 +22,28 @@ use Moose::Util::TypeConstraints;
 use namespace::autoclean;
 
 subtype ResultSet,
-    as Parameterizable[BaseResultSet, Str],
+    as Parameterizable[BaseResultSet, Maybe[Str]],
     where {
         my($rs, $source_name) = @_;
         return MooseX::Types::DBIx::Class::is_ResultSet($rs) && (!$source_name || $rs->result_source->source_name eq $source_name);
     };
 
 subtype ResultSource,
-    as Parameterizable[BaseResultSource, Str],
+    as Parameterizable[BaseResultSource, Maybe[Str]],
     where {
         my($rs, $source_name) = @_;
         return MooseX::Types::DBIx::Class::is_ResultSource($rs) && (!$source_name || $rs->source_name eq $source_name);
     };
 
 subtype Row,
-    as Parameterizable[BaseRow, Str],
+    as Parameterizable[BaseRow, Maybe[Str]],
     where {
         my($row, $source_name) = @_;
         return MooseX::Types::DBIx::Class::is_Row($row) && (!$source_name || $row->result_source->source_name eq $source_name);
     };
 
 subtype Schema,
-    as Parameterizable[BaseSchema, RegexpRef|Str],
+    as Parameterizable[BaseSchema, Maybe[RegexpRef|Str]],
     where {
         my($schema, $pattern) = @_;
         return MooseX::Types::DBIx::Class::is_Schema($schema) && (!$pattern || ref($schema) =~ m/$pattern/);
@@ -65,6 +65,12 @@ subtype Schema,
     has other_albums => (
         is  => 'ro',
         isa => ResultSet['Album']
+    );
+
+    # for convenience, these types can act like their non-parameterized base types too
+    has any_resultset => (
+        is  => 'ro',
+        isa => ResultSet
     );
 
     # subtyping works as expected
@@ -104,23 +110,23 @@ by L<MooseX::Types::DBIx::Class>.
 =item ResultSet[$source_name]
 
 This type constraint requires the object to be an instance of
-L<DBIx::Class::ResultSet> and to have the specified C<$source_name>.
+L<DBIx::Class::ResultSet> and to have the specified C<$source_name> (if specified).
 
 =item ResultSource[$source_name]
 
 This type constraint requires the object to be an instance of
-L<DBIx::Class::ResultSource> and to have the specified C<$source_name>.
+L<DBIx::Class::ResultSource> and to have the specified C<$source_name> (if specified).
 
 =item Row[$source_name]
 
 This type constraint requires the object to be an instance of
-L<DBIx::Class::Row> and to have the specified C<$source_name>.
+L<DBIx::Class::Row> and to have the specified C<$source_name> (if specified).
 
 =item Schema[$class_name | qr/pattern_to_match/]
 
 This type constraint is present mostly for completeness and requires the
 object to be an instance of L<DBIx::Class::Schema> and to have a class
-name that matches C<$class_name> or the regular expression specified.
+name that matches C<$class_name> or the regular expression if specified.
 
 =back
 
