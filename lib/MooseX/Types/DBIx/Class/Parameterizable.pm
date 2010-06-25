@@ -107,6 +107,10 @@ by L<MooseX::Types::DBIx::Class>.
 
 =head1 TYPES
 
+Each of the types below take an optional parameter that, if specified, restrict
+the constraint even further.  If the parameter isn't specified, it simply ensures
+the appropriate C<ISA> relationship.
+
 =over 4
 
 =item ResultSet[$source_name]
