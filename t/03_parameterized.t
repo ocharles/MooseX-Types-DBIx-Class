@@ -1,7 +1,6 @@
 use strict;
 use warnings;
 use Test::More;
-use Devel::SimpleTrace;
 use MooseX::Types::DBIx::Class qw(
     ResultSet
     ResultSource
