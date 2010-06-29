@@ -19,8 +19,6 @@ use MooseX::Types -declare => [qw(
 use MooseX::Types::Moose qw(Maybe Str RegexpRef);
 use MooseX::Types::Parameterizable qw(Parameterizable);
 use Moose::Util::TypeConstraints;
-use namespace::autoclean;
-
 
 class_type BaseResultSet, { class => 'DBIx::Class::ResultSet' };
 
