@@ -143,4 +143,10 @@ name that matches C<$class_name> or the regular expression if specified.
 
 =back
 
+=head1 BACKWARDS INCOMPATIBLE CHANGE
+
+For any users of v0.02, you will need to replace all instances
+of C<use MooseX::Types::DBIx::Class::Parameterizable> with
+C<MooseX::Types::DBIx::Class>.  The usage should be identical.
+
 =cut
