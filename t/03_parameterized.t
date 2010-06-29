@@ -47,7 +47,7 @@ use MooseX::Types::DBIx::Class qw(
     has falafels_rs     => ( is => 'rw', isa => ResultSet['Falafels']    );
     has fluffles_source => ( is => 'rw', isa => ResultSource['Fluffles'] );
     has falafel_row     => ( is => 'rw', isa => Row['Falafels']          );
-    has any_row         => ( is => 'rw', isa => Row                      );
+    has any_row         => ( isa => Row, is => 'rw'                      );
 
     subtype VeryFluffy,     as Row['Fluffles'], where { $_->fluff_factor > 500 };
     subtype SomewhatFluffy, as Row['Fluffles'], where { $_->fluff_factor > 50 };
