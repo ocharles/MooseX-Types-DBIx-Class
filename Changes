@@ -1,5 +1,12 @@
 Revision history for MooseX::Types::DBIx::Class
 
+0.03 Jun 29, 2010
+
+    * Merged standard and parameterizable types into a single module
+      PLEASE NOTE: MooseX::Types::DBIx::Class::Parameterized has been
+                   merged with MooseX::Types::DBIx::Class and is no
+                   longer in the distribution.
+
 0.02 Jun 25, 2010
 
     * Added parameterizable type constraints. Patch by Brian Phillips
