@@ -1,5 +1,9 @@
 Revision history for MooseX::Types::DBIx::Class
 
+0.04 Jun 29, 2010
+
+    * Previous version didn't have $VERSION defined in the package
+
 0.03 Jun 29, 2010
 
     * Merged standard and parameterizable types into a single module
