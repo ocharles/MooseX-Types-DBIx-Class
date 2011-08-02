@@ -45,6 +45,7 @@ use MooseX::Types::DBIx::Class qw(
     has regex_schema    => ( is => 'rw', isa => Schema[qr/schema/i]      );
     has other_schema    => ( is => 'rw', isa => Schema[qr/Other/]        );
     has falafels_rs     => ( is => 'rw', isa => ResultSet['Falafels']    );
+    has fluffles_or_falafels => ( isa => ResultSet [ 'Falafels', 'Fluffles' ], is => 'rw' );
     has fluffles_source => ( is => 'rw', isa => ResultSource['Fluffles'] );
     has falafel_row     => ( is => 'rw', isa => Row['Falafels']          );
     has any_row         => ( isa => Row, is => 'rw'                      );
@@ -131,6 +132,10 @@ is $o->picky_fluffy_fluffle, $fluffles_row, 'sub-subtyped parameterizable row';
 $fluffles_row = $schema->resultset('Fluffles')->search({ fluff_factor => 99 })->first;
 ok ! eval { $o->picky_fluffy_fluffle( $fluffles_row ); 1 }, 'somewhat (less) fluffy fluffle fails picky_fluffy_fluffle constraint';
 like $@, qr/does not pass the type constraint/, 'somewhat (less) fluffy fluffle has appropriate type-constraint error';
+
+$o->fluffles_or_falafels($schema->resultset('Fluffles'));
+$o->fluffles_or_falafels($schema->resultset('Falafels'));
+is $o->fluffles_or_falafels, $schema->resultset('Falafels'), 'Parameterizable resultset (multiple choice)';
 
 done_testing;
 

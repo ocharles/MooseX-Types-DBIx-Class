@@ -16,7 +16,7 @@ use MooseX::Types -declare => [qw(
     Schema
 )];
 
-use MooseX::Types::Moose qw(Maybe Str RegexpRef);
+use MooseX::Types::Moose qw(Maybe Str RegexpRef ArrayRef);
 use MooseX::Types::Parameterizable qw(Parameterizable);
 use Moose::Util::TypeConstraints;
 
@@ -28,25 +28,60 @@ class_type BaseRow, { class => 'DBIx::Class::Row' };
 
 class_type BaseSchema, { class => 'DBIx::Class::Schema' };
 
+sub _eq_scalar_or_array {
+    my($value, $other) = @_;
+    return 1 if ! defined $other;
+    return 1 if ! ref $other && $value eq $other;
+    return 1 if ref($other) eq 'ARRAY' && grep { $value eq $_ } @$other;
+    return 0;
+}
+
 subtype ResultSet,
-    as Parameterizable[BaseResultSet, Maybe[Str]],
+    as Parameterizable[BaseResultSet, Maybe[ArrayRef|Str]],
     where {
         my($rs, $source_name) = @_;
-        return is_BaseResultSet($rs) && (!$source_name || $rs->result_source->source_name eq $source_name);
+        return is_BaseResultSet($rs) && _eq_scalar_or_array($rs->result_source->source_name, $source_name);
+    },
+    message {
+        my($rs, $source_name) = @_;
+        $rs ||= '';
+        return sprintf(
+            '%s is not a ResultSet%s',
+            ( is_BaseResultSet($rs) ? 'ResultSet[' . $rs->result_source->source_name . ']' : qq('$rs') ),
+            ( defined $source_name ? qq([$source_name]) : '' )
+        );
     };
 
 subtype ResultSource,
-    as Parameterizable[BaseResultSource, Maybe[Str]],
+    as Parameterizable[BaseResultSource, Maybe[ArrayRef|Str]],
     where {
         my($rs, $source_name) = @_;
-        return is_BaseResultSource($rs) && (!$source_name || $rs->source_name eq $source_name);
+        return is_BaseResultSource($rs) && _eq_scalar_or_array($rs->source_name, $source_name);
+    },
+    message {
+        my($rs, $source_name) = @_;
+        $rs ||= '';
+        return sprintf(
+            '%s is not a ResultSource%s',
+            ( is_BaseResultSource($rs) ? 'ResultSource[' . $rs->source_name . ']' : qq('$rs') ),
+            ( defined $source_name ? qq([$source_name]) : '' )
+        );
     };
 
 subtype Row,
-    as Parameterizable[BaseRow, Maybe[Str]],
+    as Parameterizable[BaseRow, Maybe[ArrayRef|Str]],
     where {
         my($row, $source_name) = @_;
-        return is_BaseRow($row) && (!$source_name || $row->result_source->source_name eq $source_name);
+        return is_BaseRow($row) && _eq_scalar_or_array($row->result_source->source_name, $source_name);
+    },
+    message {
+        my($row, $source_name) = @_;
+        $row ||= '';
+        return sprintf(
+            '%s is not a Row%s',
+            ( is_BaseRow($row) ? 'Row[' . $row->result_source->source_name . ']' : qq('$row') ),
+            ( defined $source_name ? qq([$source_name]) : '' )
+        );
     };
 
 subtype Schema,
@@ -54,6 +89,11 @@ subtype Schema,
     where {
         my($schema, $pattern) = @_;
         return is_BaseSchema($schema) && (!$pattern || ref($schema) =~ m/$pattern/);
+    },
+    message {
+        my($schema, $criteria) = @_;
+        $schema ||= '';
+        return sprintf('%s is not a Schema%s', qq('$schema'), $criteria ? qq([$criteria]) : '');
     };
 1;
 
