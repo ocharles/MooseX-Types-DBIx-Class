@@ -1,6 +1,6 @@
 Revision history for MooseX::Types::DBIx::Class
 
-0.05 Aug 2, 2011
+0.05 Aug 22, 2011
 
     * Add custom messages that provide more insight into why a value
 	  doesn't meet the type constraints requirements.
